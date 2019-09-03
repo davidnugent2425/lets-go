@@ -27,12 +27,13 @@ GROUP_NAME_PROMPT = "Enter the name of your group chat: "
 FACEBOOK_LINK = 'http://facebook.com'
 WAIT_FOR_SEARCH_RESULTS = 3
 DURATION_BETWEEN_CHECKS = 15
+WEBDRIVER_WAIT_DURATION = 10
 
 def get_element_using_xpath(xpath):
-    return WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
+    return WebDriverWait(driver, WEBDRIVER_WAIT_DURATION).until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
 
 def get_element_using_css_selector(css_selector):
-    return WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, css_selector)))
+    return WebDriverWait(driver, WEBDRIVER_WAIT_DURATION).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, css_selector)))
 
 def log_in(email, password):
     email_box = get_element_using_xpath(EMAIL_BOX_XPATH)
