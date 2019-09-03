@@ -13,6 +13,17 @@ OPEN_MESSENGER_BUTTON_XPATH = '//a[@class = "_4djt"]'
 GROUPS_SEARCH_XPATH = '//input[@class = "_58al _7tpc"]'
 SEARCH_RESULTS_CSS_SELECTOR = 'div._29hk'
 GROUP_CHAT_CSS_SELECTOR = 'div._3q35'
+FRIENDS_MESSAGES_CSS_SELECTOR = 'div._aok._7i2m'
+REPLY_BUTTON_XPATH = '//span[@class = "_3-wv _7i2n"]'
+MESSAGE_BOX_XPATH = '//div[@role="combobox"]'
+SEND_BUTTON_XPATH = '//a[@class = "_30yy _38lh _7kpi"]'
+REPLY = "LETS GOOOOOOOOOOOOOOOOO"
+OPENING_MESSAGE = "\nWelcome to lets_go_monitor.py\n\nThis program will monitor your favourite facebook group chat to ensure you are always up for a night out even if you haven't seen the invite yet. The chat will be initially checked and if the program is left running it will continue to monitor the chat\n\nPrerequesits:\n You must have chromedriver installed on your computer (search chromedriver on google)\n You must have selenium installed (pip install selenium)\n"
+CHROMEDRIVER_PROMPT = "Enter the path to your chromedriver.exe file: "
+EMAIL_PROMPT = "Enter the email of your Facebook account: "
+PASSWORD_PROMPT = "Enter the password of your Facebook account: "
+GROUP_NAME_PROMPT = "Enter the name of your group chat: "
+FACEBOOK_LINK = 'http://facebook.com'
 
 def log_in(email, password):
     email_box = driver.find_element_by_xpath(EMAIL_BOX_XPATH)
@@ -44,8 +55,8 @@ def find_group_chat(group_chat_name):
 def check_messages():
     previous_nights_out = [' ']
     while True:
-        WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div._aok._7i2m')))
-        friends_messages = driver.find_elements_by_css_selector('div._aok._7i2m')
+        WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, FRIENDS_MESSAGES_CSS_SELECTOR)))
+        friends_messages = driver.find_elements_by_css_selector(FRIENDS_MESSAGES_CSS_SELECTOR)
 
         for message in friends_messages:
             print(message.text)
@@ -53,22 +64,22 @@ def check_messages():
             if ("night out" in message_text) and (message_text not in previous_nights_out):
                 message.location_once_scrolled_into_view
                 ActionChains(driver).move_to_element(message).perform()
-                reply_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[@class = "_3-wv _7i2n"]')))
+                reply_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, REPLY_BUTTON_XPATH)))
                 reply_button.click()
-                message_box = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//div[@role="combobox"]')))
-                message_box.send_keys("LETS GOOOOOOOOOOOOOOOOO")
-                send_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//a[@class = "_30yy _38lh _7kpi"]')))
+                message_box = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, MESSAGE_BOX_XPATH)))
+                message_box.send_keys(REPLY)
+                send_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, SEND_BUTTON_XPATH)))
                 send_button.click()
                 previous_nights_out.append(message_text)
         time.sleep(15)
 
 
-print("\nWelcome to lets_go_monitor.py\n\nThis program will monitor your favourite facebook group chat to ensure you are always up for a night out even if you haven't seen the invite yet. The chat will be initially checked and if the program is left running it will continue to monitor the chat\n\nPrerequesits:\n You must have chromedriver installed on your computer (search chromedriver on google)\n You must have selenium installed (pip install selenium)\n")
+print(OPENING_MESSAGE)
 
-chromedriver_path = input("Enter the path to your chromedriver.exe file: ")
-email = input("Enter the email of your Facebook account: ")
-password = input("Enter the password of your Facebook account: ")
-group_chat_name = input("Enter the name of your group chat: ")
+chromedriver_path = input(CHROMEDRIVER_PROMPT)
+email = input(EMAIL_PROMPT)
+password = input(PASSWORD_PROMPT)
+group_chat_name = input(GROUP_NAME_PROMPT)
 
 driver_options = webdriver.ChromeOptions()
 preferences = {"profile.default_content_setting_values.notifications" : 2}
@@ -77,7 +88,7 @@ driver_options.add_experimental_option("prefs", preferences)
 driver = webdriver.Chrome(chromedriver_path, options=driver_options)
 driver.implicitly_wait(10)
 driver.maximize_window()
-driver.get('http://facebook.com')
+driver.get(FACEBOOK_LINK)
 
 log_in(email, password)
 
