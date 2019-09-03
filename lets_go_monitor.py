@@ -70,16 +70,19 @@ def check_messages():
             print(message.text)
             message_text = message.text.lower()
             if ("night out" in message_text) and (message_text not in previous_nights_out):
-                message.location_once_scrolled_into_view
-                ActionChains(driver).move_to_element(message).perform()
-                reply_button = get_element_using_xpath(REPLY_BUTTON_XPATH)
-                reply_button.click()
-                message_box = get_element_using_xpath(MESSAGE_BOX_XPATH)
-                message_box.send_keys(REPLY)
-                send_button = get_element_using_xpath(SEND_BUTTON_XPATH)
-                send_button.click()
+                reply_to(message)
                 previous_nights_out.append(message_text)
         time.sleep(DURATION_BETWEEN_CHECKS)
+
+def reply_to(message):
+    message.location_once_scrolled_into_view
+    ActionChains(driver).move_to_element(message).perform()
+    reply_button = get_element_using_xpath(REPLY_BUTTON_XPATH)
+    reply_button.click()
+    message_box = get_element_using_xpath(MESSAGE_BOX_XPATH)
+    message_box.send_keys(REPLY)
+    send_button = get_element_using_xpath(SEND_BUTTON_XPATH)
+    send_button.click()
 
 
 print(OPENING_MESSAGE)
