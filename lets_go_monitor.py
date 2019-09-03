@@ -25,24 +25,27 @@ PASSWORD_PROMPT = "Enter the password of your Facebook account: "
 GROUP_NAME_PROMPT = "Enter the name of your group chat: "
 FACEBOOK_LINK = 'http://facebook.com'
 
+def get_element_using_xpath(xpath):
+    return WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
+
 def log_in(email, password):
-    email_box = driver.find_element_by_xpath(EMAIL_BOX_XPATH)
+    email_box = get_element_using_xpath(EMAIL_BOX_XPATH)
     email_box.send_keys(email)
 
-    password_box = driver.find_element_by_xpath(PASSWORD_BOX_XPATH)
+    password_box = get_element_using_xpath(PASSWORD_BOX_XPATH)
     password_box.send_keys(password)
 
-    login_button = driver.find_element_by_xpath(LOGIN_BUTTON_XPATH)
+    login_button = get_element_using_xpath(LOGIN_BUTTON_XPATH)
     login_button.click()
 
 def find_group_chat(group_chat_name):
-    messenger_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, MESSENGER_BUTTON_XPATH)))
+    messenger_button = get_element_using_xpath(MESSENGER_BUTTON_XPATH)
     messenger_button.click()
 
-    open_messenger_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, OPEN_MESSENGER_BUTTON_XPATH)))
+    open_messenger_button = get_element_using_xpath(OPEN_MESSENGER_BUTTON_XPATH)
     open_messenger_button.click()
 
-    groups_search = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, GROUPS_SEARCH_XPATH)))
+    groups_search = get_element_using_xpath(GROUPS_SEARCH_XPATH)
     groups_search.send_keys(group_chat_name)
 
     time.sleep(5)
@@ -64,11 +67,11 @@ def check_messages():
             if ("night out" in message_text) and (message_text not in previous_nights_out):
                 message.location_once_scrolled_into_view
                 ActionChains(driver).move_to_element(message).perform()
-                reply_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, REPLY_BUTTON_XPATH)))
+                reply_button = get_element_using_xpath(REPLY_BUTTON_XPATH)
                 reply_button.click()
-                message_box = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, MESSAGE_BOX_XPATH)))
+                message_box = get_element_using_xpath(MESSAGE_BOX_XPATH)
                 message_box.send_keys(REPLY)
-                send_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, SEND_BUTTON_XPATH)))
+                send_button = get_element_using_xpath(SEND_BUTTON_XPATH)
                 send_button.click()
                 previous_nights_out.append(message_text)
         time.sleep(15)
