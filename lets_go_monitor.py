@@ -5,6 +5,64 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 
+EMAIL_BOX_XPATH = '//input[@name = "email"]'
+PASSWORD_BOX_XPATH = '//input[@name = "pass"]'
+LOGIN_BUTTON_XPATH = '//input[@value = "Log In"]'
+MESSENGER_BUTTON_XPATH = '//a[@class = "jewelButton _3eo8"]'
+OPEN_MESSENGER_BUTTON_XPATH = '//a[@class = "_4djt"]'
+GROUPS_SEARCH_XPATH = '//input[@class = "_58al _7tpc"]'
+SEARCH_RESULTS_CSS_SELECTOR = 'div._29hk'
+GROUP_CHAT_CSS_SELECTOR = 'div._3q35'
+
+def log_in(email, password):
+    email_box = driver.find_element_by_xpath(EMAIL_BOX_XPATH)
+    email_box.send_keys(email)
+
+    password_box = driver.find_element_by_xpath(PASSWORD_BOX_XPATH)
+    password_box.send_keys(password)
+
+    login_button = driver.find_element_by_xpath(LOGIN_BUTTON_XPATH)
+    login_button.click()
+
+def find_group_chat(group_chat_name):
+    messenger_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, MESSENGER_BUTTON_XPATH)))
+    messenger_button.click()
+
+    open_messenger_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, OPEN_MESSENGER_BUTTON_XPATH)))
+    open_messenger_button.click()
+
+    groups_search = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, GROUPS_SEARCH_XPATH)))
+    groups_search.send_keys(group_chat_name)
+
+    time.sleep(5)
+    WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, SEARCH_RESULTS_CSS_SELECTOR)))
+    search_results = driver.find_elements_by_css_selector(SEARCH_RESULTS_CSS_SELECTOR)
+
+    group_chat = search_results[2].find_element_by_css_selector(GROUP_CHAT_CSS_SELECTOR)
+    group_chat.click()
+
+def check_messages():
+    previous_nights_out = [' ']
+    while True:
+        WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div._aok._7i2m')))
+        friends_messages = driver.find_elements_by_css_selector('div._aok._7i2m')
+
+        for message in friends_messages:
+            print(message.text)
+            message_text = message.text.lower()
+            if ("night out" in message_text) and (message_text not in previous_nights_out):
+                message.location_once_scrolled_into_view
+                ActionChains(driver).move_to_element(message).perform()
+                reply_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[@class = "_3-wv _7i2n"]')))
+                reply_button.click()
+                message_box = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//div[@role="combobox"]')))
+                message_box.send_keys("LETS GOOOOOOOOOOOOOOOOO")
+                send_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//a[@class = "_30yy _38lh _7kpi"]')))
+                send_button.click()
+                previous_nights_out.append(message_text)
+        time.sleep(15)
+
+
 print("\nWelcome to lets_go_monitor.py\n\nThis program will monitor your favourite facebook group chat to ensure you are always up for a night out even if you haven't seen the invite yet. The chat will be initially checked and if the program is left running it will continue to monitor the chat\n\nPrerequesits:\n You must have chromedriver installed on your computer (search chromedriver on google)\n You must have selenium installed (pip install selenium)\n")
 
 chromedriver_path = input("Enter the path to your chromedriver.exe file: ")
@@ -21,48 +79,8 @@ driver.implicitly_wait(10)
 driver.maximize_window()
 driver.get('http://facebook.com')
 
-email_box = driver.find_element_by_xpath('//input[@name = "email"]')
-email_box.send_keys(email)
+log_in(email, password)
 
-password_box = driver.find_element_by_xpath('//input[@name = "pass"]')
-password_box.send_keys(password)
+find_group_chat(group_chat_name)
 
-login_button = driver.find_element_by_xpath('//input[@value = "Log In"]')
-login_button.click()
-
-messenger_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//a[@class = "jewelButton _3eo8"]')))
-messenger_button.click()
-
-open_messenger_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//a[@class = "_4djt"]')))
-open_messenger_button.click()
-
-groups_search = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//input[@class = "_58al _7tpc"]')))
-groups_search.send_keys(group_chat_name)
-
-time.sleep(5)
-WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div._29hk')))
-search_results = driver.find_elements_by_css_selector('div._29hk')
-
-group_chat = search_results[2].find_element_by_css_selector('div._3q35')
-group_chat.click()
-
-previous_nights_out = [' ']
-
-while True:
-    WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div._aok._7i2m')))
-    friends_messages = driver.find_elements_by_css_selector('div._aok._7i2m')
-
-    for message in friends_messages:
-        print(message.text)
-        message_text = message.text.lower()
-        if ("night out" in message_text) and (message_text not in previous_nights_out):
-            message.location_once_scrolled_into_view
-            ActionChains(driver).move_to_element(message).perform()
-            reply_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[@class = "_3-wv _7i2n"]')))
-            reply_button.click()
-            message_box = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//div[@role="combobox"]')))
-            message_box.send_keys("LETS GOOOOOOOOOOOOOOOOO")
-            send_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//a[@class = "_30yy _38lh _7kpi"]')))
-            send_button.click()
-            previous_nights_out.append(message_text)
-    time.sleep(15)
+check_messages()
