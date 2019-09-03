@@ -28,6 +28,9 @@ FACEBOOK_LINK = 'http://facebook.com'
 def get_element_using_xpath(xpath):
     return WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
 
+def get_element_using_css_selector(css_selector):
+    return WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, css_selector)))
+
 def log_in(email, password):
     email_box = get_element_using_xpath(EMAIL_BOX_XPATH)
     email_box.send_keys(email)
@@ -49,7 +52,7 @@ def find_group_chat(group_chat_name):
     groups_search.send_keys(group_chat_name)
 
     time.sleep(5)
-    WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, SEARCH_RESULTS_CSS_SELECTOR)))
+    get_element_using_css_selector(SEARCH_RESULTS_CSS_SELECTOR)
     search_results = driver.find_elements_by_css_selector(SEARCH_RESULTS_CSS_SELECTOR)
 
     group_chat = search_results[2].find_element_by_css_selector(GROUP_CHAT_CSS_SELECTOR)
@@ -58,7 +61,7 @@ def find_group_chat(group_chat_name):
 def check_messages():
     previous_nights_out = [' ']
     while True:
-        WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, FRIENDS_MESSAGES_CSS_SELECTOR)))
+        get_element_using_css_selector(FRIENDS_MESSAGES_CSS_SELECTOR)
         friends_messages = driver.find_elements_by_css_selector(FRIENDS_MESSAGES_CSS_SELECTOR)
 
         for message in friends_messages:
