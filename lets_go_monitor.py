@@ -24,7 +24,7 @@ EMAIL_PROMPT = "Enter the email of your Facebook account: "
 PASSWORD_PROMPT = "Enter the password of your Facebook account: "
 GROUP_NAME_PROMPT = "Enter the name of your group chat: "
 FACEBOOK_LINK = 'http://facebook.com'
-WAIT_FOR_SEARCH_RESULTS = 5
+WAIT_FOR_SEARCH_RESULTS = 3
 DURATION_BETWEEN_CHECKS = 15
 
 def get_element_using_xpath(xpath):
