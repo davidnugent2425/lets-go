@@ -24,6 +24,8 @@ EMAIL_PROMPT = "Enter the email of your Facebook account: "
 PASSWORD_PROMPT = "Enter the password of your Facebook account: "
 GROUP_NAME_PROMPT = "Enter the name of your group chat: "
 FACEBOOK_LINK = 'http://facebook.com'
+WAIT_FOR_SEARCH_RESULTS = 5
+DURATION_BETWEEN_CHECKS = 15
 
 def get_element_using_xpath(xpath):
     return WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, xpath)))
@@ -51,7 +53,7 @@ def find_group_chat(group_chat_name):
     groups_search = get_element_using_xpath(GROUPS_SEARCH_XPATH)
     groups_search.send_keys(group_chat_name)
 
-    time.sleep(5)
+    time.sleep(WAIT_FOR_SEARCH_RESULTS)
     get_element_using_css_selector(SEARCH_RESULTS_CSS_SELECTOR)
     search_results = driver.find_elements_by_css_selector(SEARCH_RESULTS_CSS_SELECTOR)
 
@@ -77,7 +79,7 @@ def check_messages():
                 send_button = get_element_using_xpath(SEND_BUTTON_XPATH)
                 send_button.click()
                 previous_nights_out.append(message_text)
-        time.sleep(15)
+        time.sleep(DURATION_BETWEEN_CHECKS)
 
 
 print(OPENING_MESSAGE)
@@ -92,7 +94,6 @@ preferences = {"profile.default_content_setting_values.notifications" : 2}
 driver_options.add_experimental_option("prefs", preferences)
 
 driver = webdriver.Chrome(chromedriver_path, options=driver_options)
-driver.implicitly_wait(10)
 driver.maximize_window()
 driver.get(FACEBOOK_LINK)
 
