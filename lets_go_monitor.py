@@ -39,7 +39,11 @@ open_messenger_button.click()
 groups_search = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//input[@class = "_58al _7tpc"]')))
 groups_search.send_keys(group_chat_name)
 
-group_chat = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div._3q35')))
+time.sleep(5)
+WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, 'div._29hk')))
+search_results = driver.find_elements_by_css_selector('div._29hk')
+
+group_chat = search_results[2].find_element_by_css_selector('div._3q35')
 group_chat.click()
 
 previous_nights_out = [' ']
@@ -50,7 +54,8 @@ while True:
 
     for message in friends_messages:
         print(message.text)
-        if ("night out" in message.text.lower()) and (message.text.lower() not in previous_nights_out):
+        message_text = message.text.lower()
+        if ("night out" in message_text) and (message_text not in previous_nights_out):
             message.location_once_scrolled_into_view
             ActionChains(driver).move_to_element(message).perform()
             reply_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//span[@class = "_3-wv _7i2n"]')))
@@ -59,5 +64,5 @@ while True:
             message_box.send_keys("LETS GOOOOOOOOOOOOOOOOO")
             send_button = WebDriverWait(driver, 10).until(expected_conditions.visibility_of_element_located((By.XPATH, '//a[@class = "_30yy _38lh _7kpi"]')))
             send_button.click()
-            previous_nights_out.append(message.text.lower())
+            previous_nights_out.append(message_text)
     time.sleep(15)
