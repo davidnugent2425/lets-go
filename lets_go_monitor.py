@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import time
+import getpass
 
 EMAIL_BOX_XPATH = '//input[@name = "email"]'
 PASSWORD_BOX_XPATH = '//input[@name = "pass"]'
@@ -21,7 +22,7 @@ REPLY = "LETS GOOOOOOOOOOOOOOOOO"
 OPENING_MESSAGE = "\nWelcome to lets_go_monitor.py\n\nThis program will monitor your favourite facebook group chat to ensure you are always up for a night out even if you haven't seen the invite yet. The chat will be initially checked and if the program is left running it will continue to monitor the chat\n\nPrerequesits:\n You must have chromedriver installed on your computer (search chromedriver on google)\n You must have selenium installed (pip install selenium)\n"
 CHROMEDRIVER_PROMPT = "Enter the path to your chromedriver.exe file: "
 EMAIL_PROMPT = "Enter the email of your Facebook account: "
-PASSWORD_PROMPT = "Enter the password of your Facebook account: "
+PASSWORD_PROMPT = "Enter the password of your Facebook account (input is hidden): "
 GROUP_NAME_PROMPT = "Enter the name of your group chat: "
 FACEBOOK_LINK = 'http://facebook.com'
 WAIT_FOR_SEARCH_RESULTS = 3
@@ -82,14 +83,14 @@ def reply_to(message):
     message_box = get_element_using_xpath(MESSAGE_BOX_XPATH)
     message_box.send_keys(REPLY)
     send_button = get_element_using_xpath(SEND_BUTTON_XPATH)
-    send_button.click()
+    #send_button.click()
 
 
 print(OPENING_MESSAGE)
 
 chromedriver_path = input(CHROMEDRIVER_PROMPT)
 email = input(EMAIL_PROMPT)
-password = input(PASSWORD_PROMPT)
+password = getpass.getpass(PASSWORD_PROMPT)
 group_chat_name = input(GROUP_NAME_PROMPT)
 
 driver_options = webdriver.ChromeOptions()
